@@ -102,9 +102,45 @@ public class Engine {
         String column = tokens[5];  // assumes syntax: SELECT * FROM table_name WHERE column = value
         String value = tokens[7];
 
-        // Fetch matching rows using the index in Table
-        List<Map<String, String>> results = tbl.select(column, value);
-        return results.toString();
+        if (tokens.length > 8 && (tokens[8].equalsIgnoreCase("and") || tokens[8].equalsIgnoreCase("or"))) {
+            if (tokens.length < 12) {
+                return "ERROR: Invalid query format for AND/OR condition.";
+            }
+
+            // Fetch matching rows using the index in Table
+            String column2 = token[9]; // assumes syntax: SELECT * FROM table_name WHERE column = value AND/OR column2 = value2
+            String value2 = tokens[11];
+
+            List<Map<String, String>> results1 = tbl.select(column, value);
+            List<Map<String, String>> results2 = tbl.select(column2, value2);
+
+            // Create a new list to hold common elements, if AND condition
+            // Create a new list to hold common elements, if AND condition
+            List<Map<String, String>> commonResults = new ArrayList<>();
+            if (tokens[8].equalsIgnoreCase("and")) {
+                List<Map<String, String>> andResult = results1.stream()
+                    .filter(results2::contains)
+                    .collect(Collectors.toList());
+
+                return andResult.toString();
+            } 
+            // Create a new list to hold unique elements, if OR condition
+            else if (tokens[8].equalsIgnoreCase("or")) {
+                Set<Map<String, String>> orResultSet = new HashSet<>(results1);
+                orResultSet.addAll(results2);
+                List<Map<String, String>> orResult = new ArrayList<>(orResultSet);\
+
+                return orResult.toString();
+            }
+            else{
+                return "ERROR: Invalid query format for AND/OR condition.";
+            }
+        }
+        else{
+            // Fetch matching rows using the index in Table
+            List<Map<String, String>> results = tbl.select(column, value);
+            return results.toString();
+        }
     }
 
     // Updated implementation of the UPDATE command to skip null rows
