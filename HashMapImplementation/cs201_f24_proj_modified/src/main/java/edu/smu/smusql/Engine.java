@@ -103,39 +103,41 @@ public class Engine {
         String value = tokens[7];
         String operator = tokens[6];
 
-        // Enter if statement if there are two WHERE conditions
-        if (tokens.length > 8 && (tokens[8].equalsIgnoreCase("and") || tokens[8].equalsIgnoreCase("or"))) {
-            if (tokens.length < 12) {
-                return "ERROR: Invalid query format for AND/OR condition.";
-            }
+        if(tokens.length == 12){
+            // Enter if statement if there are two WHERE conditions
+            if (tokens.length > 8 && (tokens[8].equalsIgnoreCase("and") || tokens[8].equalsIgnoreCase("or"))) {
+                if (tokens.length < 12) {
+                    return "ERROR: Invalid query format for AND/OR condition.";
+                }
 
-            // Fetch matching rows using the index in Table
-            String column2 = token[9]; // assumes syntax: SELECT * FROM table_name WHERE column = value AND/OR column2 = value2
-            String value2 = tokens[11];
-            String operator2 = tokens[10];
+                // Fetch matching rows selusing the index in Table
+                String column2 = token[9]; // assumes syntax: SELECT * FROM table_name WHERE column = value AND/OR column2 = value2
+                String value2 = tokens[11];
+                String operator2 = tokens[10];
 
-            List<Map<String, String>> results1 = tbl.select(column, value, operator);
-            List<Map<String, String>> results2 = tbl.select(column2, value2, operator2);
+                List<Map<String, String>> results1 = tbl.select(column, value);
+                List<Map<String, String>> results2 = tbl.select(column2, value2);
 
-            // Create a new list to hold common elements, if AND condition
-            List<Map<String, String>> commonResults = new ArrayList<>();
-            if (tokens[8].equalsIgnoreCase("and")) {
-                List<Map<String, String>> andResult = results1.stream()
-                    .filter(results2::contains)
-                    .collect(Collectors.toList());
+                // Create a new list to hold common elements, if AND condition
+                List<Map<String, String>> commonResults = new ArrayList<>();
+                if (tokens[8].equalsIgnoreCase("and")) {
+                    List<Map<String, String>> andResult = results1.stream()
+                        .filter(results2::contains)
+                        .collect(Collectors.toList());
 
-                return andResult.toString();
-            } 
-            // Create a new list to hold unique elements, if OR condition
-            else if (tokens[8].equalsIgnoreCase("or")) {
-                Set<Map<String, String>> orResultSet = new HashSet<>(results1);
-                orResultSet.addAll(results2);
-                List<Map<String, String>> orResult = new ArrayList<>(orResultSet);
+                    return andResult.toString();
+                } 
+                // Create a new list to hold unique elements, if OR condition
+                else if (tokens[8].equalsIgnoreCase("or")) {
+                    Set<Map<String, String>> orResultSet = new HashSet<>(results1);
+                    orResultSet.addAll(results2);
+                    List<Map<String, String>> orResult = new ArrayList<>(orResultSet);
 
-                return orResult.toString();
-            }
-            else{
-                return "ERROR: Invalid query format for AND/OR condition.";
+                    return orResult.toString();
+                }
+                else{
+                    return "ERROR: Invalid query format for AND/OR condition.";
+                }
             }
         }
         else{ // Only 1 WHERE condition
@@ -143,7 +145,7 @@ public class Engine {
             List<Map<String, String>> results = tbl.select(column, value, operator);
             return results.toString();
         }
-    }
+}
 
     // Updated implementation of the UPDATE command to skip null rows
     public String update(String[] tokens) {

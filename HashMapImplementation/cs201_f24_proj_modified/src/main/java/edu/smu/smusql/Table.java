@@ -55,7 +55,7 @@ public class Table {
     }
 
     // Method to select rows based on a column value
-    public List<Map<String, String>> select(String column, String value, string operator) {
+    public List<Map<String, String>> select(String column, String value) {
         List<Map<String, String>> result = new ArrayList<>();
         Map<String, List<Integer>> columnIndex = indexMap.get(column);
 
@@ -64,8 +64,7 @@ public class Table {
             List<Integer> rowIndices = columnIndex.get(value);
             for (int rowIndex : rowIndices) {
                 Map<String, String> row = dataList.get(rowIndex);
-                if (row != null) {  // Skip null (deleted) rows
-                    if(evaluateOperator(columnIndex, value, operator))
+                if (row != null ) {  // Skip null (deleted) row s&& evaluateOperator(columnIndex, value, operator)
                     result.add(row);
                 }
             }
@@ -74,32 +73,27 @@ public class Table {
     }
 
     // Helper method to evaluate the operators in WHERE Condition
-    private boolean evaluateOperator(String columnValue, String value, String operator){
-        switch (operator) {
-            case "<":
-                System.out.println("I'm in the < line");
-                return columnValue.compareTo(value) < 0;
-                break;
-            case ">":
-                System.out.println("I'm in the > line");
-                return columnValue.compareTo(value) > 0;
-                break;
-            case "<=":
-                return columnValue.compareTo(value) <= 0;
-                break;
-            case ">=":
-                return columnValue.compareTo(value) >= 0;
-                break;
-            case "==":
-                return columnValue.equals(value);
-                break;
-            case "!=":
-                return !columnValue.equals(value);
-                break;
-            default:
-                return true;
-        }
-    }
+    // private boolean evaluateOperator(String columnValue, String value, String operator){
+    //     switch (operator) {
+    //         case "<":
+    //             System.out.println("I'm in the < line");
+    //             return columnValue.compareTo(value) < 0;
+    //         case ">":
+    //             System.out.println("I'm in the > line");
+    //             return columnValue.compareTo(value) > 0;
+    //         case "<=":
+    //             return columnValue.compareTo(value) <= 0;
+    //         case ">=":
+    //             return columnValue.compareTo(value) >= 0;
+    //         case "==":
+    //             System.out.println("I'm in the == line");
+    //             return columnValue.equalsIgnoreCase(value);
+    //         case "!=":
+    //             return !columnValue.equalsIgnoreCase(value);
+    //         default:
+    //             return false;
+    //     }
+    // }
 
     // Updated method to ensure null checks before updating rows
     public int update(String column, String value, Map<String, String> updates) {

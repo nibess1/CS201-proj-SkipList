@@ -108,7 +108,7 @@ public class Parser {
 
     // Helper method to check if a token is an operator
     private boolean isOperator(String token) {
-        return token.equals("=") || token.equals(">") || token.equals("<") || token.equals(">=") || token.equals("<=");
+        return token.equals("==") || token.equals(">") || token.equals("<") || token.equals(">=") || token.equals("<=");
     }
 
     // Helper method to extract content within parentheses
