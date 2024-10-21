@@ -101,7 +101,9 @@ public class Engine {
         // Handle conditional selects (assuming WHERE clause present)
         String column = tokens[5];  // assumes syntax: SELECT * FROM table_name WHERE column = value
         String value = tokens[7];
+        String operator = tokens[6];
 
+        // Enter if statement if there are two WHERE conditions
         if (tokens.length > 8 && (tokens[8].equalsIgnoreCase("and") || tokens[8].equalsIgnoreCase("or"))) {
             if (tokens.length < 12) {
                 return "ERROR: Invalid query format for AND/OR condition.";
@@ -110,11 +112,11 @@ public class Engine {
             // Fetch matching rows using the index in Table
             String column2 = token[9]; // assumes syntax: SELECT * FROM table_name WHERE column = value AND/OR column2 = value2
             String value2 = tokens[11];
+            String operator2 = tokens[10];
 
-            List<Map<String, String>> results1 = tbl.select(column, value);
-            List<Map<String, String>> results2 = tbl.select(column2, value2);
+            List<Map<String, String>> results1 = tbl.select(column, value, operator);
+            List<Map<String, String>> results2 = tbl.select(column2, value2, operator2);
 
-            // Create a new list to hold common elements, if AND condition
             // Create a new list to hold common elements, if AND condition
             List<Map<String, String>> commonResults = new ArrayList<>();
             if (tokens[8].equalsIgnoreCase("and")) {
@@ -128,7 +130,7 @@ public class Engine {
             else if (tokens[8].equalsIgnoreCase("or")) {
                 Set<Map<String, String>> orResultSet = new HashSet<>(results1);
                 orResultSet.addAll(results2);
-                List<Map<String, String>> orResult = new ArrayList<>(orResultSet);\
+                List<Map<String, String>> orResult = new ArrayList<>(orResultSet);
 
                 return orResult.toString();
             }
@@ -136,9 +138,9 @@ public class Engine {
                 return "ERROR: Invalid query format for AND/OR condition.";
             }
         }
-        else{
+        else{ // Only 1 WHERE condition
             // Fetch matching rows using the index in Table
-            List<Map<String, String>> results = tbl.select(column, value);
+            List<Map<String, String>> results = tbl.select(column, value, operator);
             return results.toString();
         }
     }

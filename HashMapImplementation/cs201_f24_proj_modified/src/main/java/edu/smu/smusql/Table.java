@@ -55,7 +55,7 @@ public class Table {
     }
 
     // Method to select rows based on a column value
-    public List<Map<String, String>> select(String column, String value) {
+    public List<Map<String, String>> select(String column, String value, string operator) {
         List<Map<String, String>> result = new ArrayList<>();
         Map<String, List<Integer>> columnIndex = indexMap.get(column);
 
@@ -65,11 +65,40 @@ public class Table {
             for (int rowIndex : rowIndices) {
                 Map<String, String> row = dataList.get(rowIndex);
                 if (row != null) {  // Skip null (deleted) rows
+                    if(evaluateOperator(columnIndex, value, operator))
                     result.add(row);
                 }
             }
         }
         return result;
+    }
+
+    // Helper method to evaluate the operators in WHERE Condition
+    private boolean evaluateOperator(String columnValue, String value, String operator){
+        switch (operator) {
+            case "<":
+                System.out.println("I'm in the < line");
+                return columnValue.compareTo(value) < 0;
+                break;
+            case ">":
+                System.out.println("I'm in the > line");
+                return columnValue.compareTo(value) > 0;
+                break;
+            case "<=":
+                return columnValue.compareTo(value) <= 0;
+                break;
+            case ">=":
+                return columnValue.compareTo(value) >= 0;
+                break;
+            case "==":
+                return columnValue.equals(value);
+                break;
+            case "!=":
+                return !columnValue.equals(value);
+                break;
+            default:
+                return true;
+        }
     }
 
     // Updated method to ensure null checks before updating rows
