@@ -75,8 +75,10 @@ public class Table {
             double num2 = Double.parseDouble(value2);
     
             switch (operator) {
-                case "=":
+                case "==":
                     return num1 == num2;
+                case "!=":
+                    return num1 != num2;
                 case "<":
                     return num1 < num2;
                 case ">":
@@ -93,8 +95,10 @@ public class Table {
             int comparison = value1.compareTo(value2);
     
             switch (operator) {
-                case "=":
+                case "==":
                     return comparison == 0;
+                case "!=":
+                    return comparison != 0;
                 case "<":
                     return comparison < 0;
                 case ">":

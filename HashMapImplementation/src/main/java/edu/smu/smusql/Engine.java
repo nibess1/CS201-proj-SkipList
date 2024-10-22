@@ -268,7 +268,7 @@ public class Engine {
             double num2 = Double.parseDouble(value2);
 
             switch (operator) {
-                case "=":
+                case "==":
                     return num1 == num2;
                 case "<":
                     return num1 < num2;
@@ -278,6 +278,8 @@ public class Engine {
                     return num1 <= num2;
                 case ">=":
                     return num1 >= num2;
+                case "!=":
+                    return num1 != num2;
                 default:
                     return false;
             }
@@ -286,7 +288,7 @@ public class Engine {
             int comparison = value1.compareTo(value2);
 
             switch (operator) {
-                case "=":
+                case "==":
                     return comparison == 0;
                 case "<":
                     return comparison < 0;
@@ -296,6 +298,8 @@ public class Engine {
                     return comparison <= 0;
                 case ">=":
                     return comparison >= 0;
+                case "!=":
+                    return comparison != 0;
                 default:
                     return false;
             }
